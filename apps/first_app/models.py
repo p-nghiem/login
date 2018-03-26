@@ -52,40 +52,23 @@ class UserManager(BaseUserManager):
         return user
 
 #       course = Course.objects.filter(name = postData['name'])
+
+class Item(models.Model):
+    name = models.CharField(max_length=255)
+    desc = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
+    added_by_id = models.IntegerField()
+    def __repr__(self):
+        return "<Book object: {} {} {} {} {}>".format(self.name, self.desc, self.created_at, self.updated_at, self.uploaded_by_id)
 '''
-        if len(course) > 0:
-            errors['exists'] = "Course already exists"
-        if len(postData['name']) < 6:
-            errors['name'] = "Course name must be at least 6 letters"
-        if len(postData['description']) < 15:
-            errors['description'] = "Description name must be at least 15 letters"
+class User(models.Model):
+    uploaded_books = models.ManyToManyField(Book, related_name="uploader")
+    liked_books = models.ManyToManyField(Book, related_name="liked_users")
+    def __repr__(self):
+        return "<User object: {} {} {} {} {} {} {}>".format(self.first_name, self.last_name, self.email, self.created_at, self.updated_at, self.uploaded_books, self.liked_books)
 '''
-'''
-    if len(firstname) < 2 or firstname.isalpha() == False:
-      # Error first name
-      print "Error in first name"
-      # flash("First name must be at least 2 characters long, letters only")
-      return redirect('/')
-    if len(lastname) < 2 or firstname.isalpha() == False:
-      # Error last name
-      # flash("Last name must be at least 2 characters long, letters only")
-      print "Error in last name"
-      return redirect('/')
-    if not rejectEmail.match(email):
-      # flash("Email is not valid!")  # Error email format
-      print "Email not valid"
-      return redirect('/')
-    if len(password) < 8:
-      # Error password
-      # flash("Password must be at least 8 characters long")
-      print "Password too short"
-      return redirect('/')
-    if password != confirmpassword:
-      # Error password match
-      # flash("Passwords must match")
-      print "Password mismatch"
-      return redirect('/')  
-'''
+
     
 class User(AbstractBaseUser):
     first_name = models.CharField(max_length=255)
@@ -93,6 +76,8 @@ class User(AbstractBaseUser):
     email = models.EmailField(max_length=255, unique=True)
     password = models.CharField(max_length=255)
     birthday = models.DateTimeField(blank=True, null=True)
+    added_items = models.ManyToManyField(Item, related_name="item_adder")
+    wished_for_items = models.ManyToManyField(Item, related_name="wished_for_by_users")
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
     objects = UserManager()
@@ -108,18 +93,4 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.email
-
-'''
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    email = models.CharField(max_length=255)
-    password = models.CharField(max_length=255)
-    birthday = models.DateTimeField(blank=True, null=True)
-    anniversary = models.DateTimeField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add = True)
-    updated_at = models.DateTimeField(auto_now = True)
-    objects = UserManager()
-'''
-    # def __repr__(self):
-    #    return "<User object: {} {} {} {} {} {} {}>".format(self.first_name, self.last_name, self.email, self.created_at, self.updated_at, self.uploaded_books, self.liked_books)
 

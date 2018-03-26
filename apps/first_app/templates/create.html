@@ -1,0 +1,46 @@
+<html>
+
+<head>
+    <title>Wish List</title>
+    <link rel="stylesheet" type="text/css" href="static/style.css">
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <!--
+   
+    -->
+    <h2> Create a New Wish List Item </h2>
+
+    <h2></h2>
+
+     
+        <label>Item/Product</label>
+            <form action='/add_new_item' method='POST'>
+                {% csrf_token %}
+                <input type='text' name='Item/Product'/>
+                <input id="remove" type="submit" value="Add" />
+            </form>
+
+            <a href="/dashboard">Home</a>
+            <a href="/">Logout</a>
+
+    <!--
+    <form action='/goback' method='POST'>
+        <div class="result">
+            {% csrf_token %}
+
+            <p> <label>Your Name: </label> {{ name }} </p>
+            <p> <label>Dojo Location: </label> {{ location }} </p>
+            <p> <label>Favorite Language: </label> {{ fave_language }} </p>
+            <p> <label>Comment: {{ comment }} </p>
+
+            <p> <input id="submit" type="submit" value="Go Back" name="submit"> </p>
+        </div>
+    </form>
+     -->
+
+    
+</body>
+
+</html>

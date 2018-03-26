@@ -1,0 +1,112 @@
+<html>
+
+<head>
+    <title>Wish List</title>
+    <link rel="stylesheet" type="text/css" href="static/style.css">
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <!--
+   
+    -->
+    <h2> Welcome {{ firstname }}! </h2>
+
+    <h2> Your Wish List:</h2>
+        <table style="width:100%">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Added By</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in all_items %}
+                <tr>
+                    <td>{{ item.item }}</td>
+                    <td>{{ item.added_by }}</td>
+                    <td>{{ item.created_at }}</td>
+                    <td>
+                        <label>Action: </label>
+                        <a href="/remove_from_wishlist">Remove from my Wishlist</a>
+                        <!--                                              
+                        <form action='/remove' method='POST'>
+                            {% csrf_token %}
+                            <input type='hidden' name='item_id' value={{ item.id }} />
+                            <input id="remove" type="submit" value="Remove" />
+                        </form>
+                        -->
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    <h2> Other Users' Wish Lists: </h2>
+            <table style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Added By</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!--
+                    Replace with database calls
+                    -->
+                    {% for otheruseritem in all_otheruseritems %}
+                    <tr>
+                        <td>{{ otheruseritem.item }}</td>
+                        <td>{{ otheruseritem.added_by }}</td>
+                        <td>{{ otheruseritem.created_at }}</td>
+                        <td>
+                            <label>Action: </label>
+                            <a href="/add_to_wishlist">Add to my Wishlist</a>
+                    <!--
+                            <form action='/add' method='POST'>
+                                {% csrf_token %}
+                                <input type='hidden' name='item_id' value={{ item.id }} />
+                                <input id="add" type="submit" value="Add" />
+                            </form>
+                                        -->
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+<!--
+            <form action='/add_new_item' method='POST'>
+                {% csrf_token %}
+                <input type='hidden' name='item_id' value={{ item.id }} />
+                <input id="add" type="submit" value="Add Item" />
+            </form>
+-->
+
+<p> </p>
+            <a href="/create">Add Item</a>
+            <a href="/index">Logout</a>
+
+
+    <!--
+    <form action='/goback' method='POST'>
+        <div class="result">
+            {% csrf_token %}
+
+            <p> <label>Your Name: </label> {{ name }} </p>
+            <p> <label>Dojo Location: </label> {{ location }} </p>
+            <p> <label>Favorite Language: </label> {{ fave_language }} </p>
+            <p> <label>Comment: {{ comment }} </p>
+
+            <p> <input id="submit" type="submit" value="Go Back" name="submit"> </p>
+        </div>
+    </form>
+     -->
+
+    
+</body>
+
+</html>

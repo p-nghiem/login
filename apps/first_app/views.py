@@ -41,7 +41,6 @@ def register(request):
         return redirect('/success')
     return redirect('/')
 
-
 def login(request):
     if request.method == "POST":
 
@@ -59,120 +58,81 @@ def login(request):
 
         # Check if password match
         else:
-            encrypted_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
-            password_from_db=User.objects.filter(email=email).first()
-            if bcrypt.checkpw(password_from_db.password.encode(), encrypted_password.encode()):
+            # encrypted_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+            # password_from_db = User.objects.filter(email=email).first()
+            password_from_db = User.objects.get(email=email).password
+
+            if bcrypt.checkpw(password.encode(), password_from_db.encode()):
                 # this means we have a successful login!
-                print "Success"
+                user_id = User.objects.get(email=email).id
                 return redirect('/success')
             else:
                 # invalid password!
                 errors['password'] = "Password is not valid"
                 print "Invalid password"
                 print ('User entered:', encrypted_password)
-                print ('Password from db:', password_from_db.password.encode())
+                print ('Password from db:', password_from_db.encode())
                 return redirect('/')
 
     return redirect('/')
 
 
 def success(request):
-  firstname = request.session['firstname']
-  context = {'firstname': firstname}
-  return render(request,'success.html', context)
+    firstname = request.session['firstname']
+#  context = {'firstname': firstname}
+
+#   all_items = Item.objects.all()
+
+#   context = {
+#       'firstname': firstname,
+#       'all_items': all_items
+#   }
+    items = [
+      {'item': 'iPhone9', 'added_by': 'Mark', 'item_id': 101},
+      {'item': 'MountainBike', 'added_by': 'Jeffrey', 'item_id': 102},
+      {'item': 'Macbook Pro', 'added_by': 'Sheila', 'item_id': 103},
+      {'item': 'Hiking Bag', 'added_by': 'Steve', 'item_id': 104}
+    ]
+    otheruseritems = [
+      {'item': 'Rolex Watch', 'added_by': 'John', 'item_id': 105},
+      {'item': 'Hotel Stay', 'added_by': 'Stan', 'item_id': 106},
+      {'item': 'BBQ Grill', 'added_by': 'Sofia', 'item_id': 107},
+      {'item': 'Zumba DVD', 'added_by': 'Jeric', 'item_id': 108}
+    ]
+
+    context = {
+      'all_items': items,
+      'all_otheruseritems': otheruseritems
+      }
+
+    return render(request,'dashboard.html', context)
+
+
+def create (request):
+    pass # validate item and save in database
+    return render(request,'create.html')
+
+def add_new_item (request):
+    pass # validate item and save in database
+    return redirect ('/dashboard')
+
+def add_to_wishlist (request):
+    pass  
+    return redirect ('/dashboard')
+
+def remove_from_wishlist (request):
+    pass  
+    return redirect ('/dashboard')
+
+def delete_from_database (request):
+    pass # delete from the db
+    return redirect ('/databoard')
 
 
 # the index function is called when root is visited
 
 def index(request):
 
-  '''
-  if 'gold_total' not in request.session:
-    request.session['gold_total'] = 0  
-    gold_total = 0
-    print 'Gold Total'
-    print gold_total
-  if 'activity_log' not in request.session:
-    request.session['activity_log'] = {}
-  
-  activity_log = request.session['activity_log']
-  context = {'all_activities': activity_log}
-  return render(request,'index.html', context)
-  '''
   return render(request,'index.html')
-
-
-###
-# login registration from flask
-###
-'''
-
-@app.route('/users/create', methods=['POST'])
-def create_user():
-    firstname = request.form['firstname']
-    lastname = request.form['lastname']
-    email = request.form['email']
-    password = request.form['password']
-    submit = request.form['submit']
-
-    if request.method == "POST":
-        if len(firstname) < 2:
-            # Error first name
-            print "Error in first name"
-            flash("First name must be at least 2 characters long")
-            return redirect('/')
-        if len(lastname) < 2:
-            # Error last name
-            flash("Last name must be at least 2 characters long")
-            return redirect('/')
-        if not rejectEmail.match(email):
-            flash("Email is not valid!")  # Error email
-            return redirect('/')
-        if len(password) < 8:
-            # Error password
-            flash("Password must be at least 8 characters long")
-            return redirect('/')
-        else:  
-            flash(" {} successfully registered!".format(request.form['email']))
-            salt =  binascii.b2a_hex(os.urandom(15))
-            hashed_pw = md5.new(password + salt).hexdigest()
-            insert_query = "INSERT INTO friends (first_name, last_name, email, password, salt, created_at, updated_at) VALUES (:firstname, :lastname, :email, :hashed_pw, :salt, NOW(), NOW())"
-            query_data = { 'firstname': firstname, 'lastname': lastname, 'email': email, 'hashed_pw': hashed_pw, 'salt': salt}
-            mysql.query_db(insert_query, query_data)
-            return redirect('/success')
-    return render_template('index.html')
-
-@app.route('/users/login', methods=['POST'])
-def login_user():
-
-    if request.method == "POST":
-        print "in user login"
-        email = request.form['email']
-        password = request.form['password']
-        user_query = "SELECT * FROM friends WHERE friends.email = :email LIMIT 1"
-        query_data = {'email': email}
-        user = mysql.query_db(user_query, query_data)
-        if len(user) != 0:
-            encrypted_password = md5.new(password + user[0]['salt']).hexdigest()
-            if user[0]['password'] == encrypted_password:
-                # this means we have a successful login!
-                flash("Successful login")
-                return redirect('/success')
-            else:
-                # invalid password!
-                flash("Invalid password")
-                redirect('/')
-        else:
-            # invalid email!
-            flash("Invalid email")
-            redirect('/')
-    return render_template('index.html')
-
-@app.route('/success')
-def success():
-    emails = mysql.query_db ("SELECT email, DATE_FORMAT(created_at, '%M %e, %Y %H:%i') as date FROM friends")
-    return render_template('success.html', all_emails=emails)
-'''
-
 
 
